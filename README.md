@@ -1,6 +1,6 @@
 # sentinels_positions_live
 This project creates an html file running on your local http://127.0.0.1:5000, which shows the live locations of ESA's twin satellites Sentinel-2A and 2B.
-![image](https://github.com/mMandilara/sentinels_positions_live/assets/107554706/9d606ef6-4832-4423-85fd-b9edb235b765)
+![sentinels](https://github.com/mMandilara/sentinels_positions_live/assets/107554706/1e92d060-25db-448d-83b8-f8bdf610d507)
 
 Using python the fetcher.py fetches every 10 seconds the data for longtitude and latitude from [N2YO.com](https://www.n2yo.com/), for both S2A and S2B satellites. With the site.py a plot is created to visualize their positions, using the [plotly](https://plotly.com) library. Then, an html is created to show this plot along with a few info written about the satellites, that I have added in the index.html.
 
