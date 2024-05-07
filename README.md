@@ -11,3 +11,9 @@ By hovering your mouse over the map you can see the coordinates corresponding to
 ![image](https://github.com/mMandilara/sentinels_positions_live/assets/107554706/85b95916-4b28-44bb-9792-b45a900a3bd5)
 
 If you want to hide one of the satellites, just click on its name on the right side of the map and it will disappear from the map. And to reappear click on the name again.
+
+## Note:
+
+To see the site and the map site.py needs to run first.
+
+Also, do not forget, to get updated data of the satellites fetcher.py needs to be running on the background. If it isn't, the html will show the last data that were saved on json files.
