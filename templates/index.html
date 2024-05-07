@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESA's Sentinels Postions - Live</title>
+    <h1>Sentinels' Postions Live </h1>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- Show the plot from site.py-->
+    <div id="plot">{{ plot | safe }}</div>
+    <p>The idea for this mission was ESA's Copernicus project, in 2015 two identical multispectral satellites were designed and launched in the 
+        summer of that year on 23 June in French Guiana.
+        <br />The purpose of this mission is to monitor changes in the Earth's surface conditions. The images are used to monitor soil, vegetation, 
+        agriculture and forestry with the ultimate aim of protecting the world's environment. 
+        The twin satellites are in geosynchronous orbit, at 
+        786 kilometres, with a distance of 180 degrees between them, which allows for a combined five-day visit to the equator.
+        <br />Due to the mission requirement for high geometric and spectral efficiency of large area measurements, a multispectral instrument 
+        (MSI) design was chosen on the two Sentinel-2s.
+        <br />For more information visit the official ESA website: <a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2"
+    target="_blank"> ESA - Sentinel-2</a>
+    </p>
+    <p> Souce for the positions of the twin satellites: 
+        <a href="https://www.n2yo.com" target="_blank">N2YO.com</a>
+    </p>
+    <script>
+        setTimeout(function() {
+            location.reload();
+        }, {{ refresh_interval }});
+    </script>
+    <!-- Footer-->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section about"></div>
+            <div class="footer-section links"></div>
+            <div class="footer-section contact-form"></div>
+        </div>
 
+        <div class="footer-bottom">
+            &copy; Made by Mariana Mandilara | @github/mMandilara
+        </div>
+    </div>
+</body>
+</html>
