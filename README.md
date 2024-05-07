@@ -21,6 +21,6 @@ Also, do not forget, to get updated data of the satellites fetcher.py needs to b
 ## Note 2:
 
 There is also the libraries that are used in the environment. To create a conda env from this only need to run:
-'''
+```
 conda env create -f environment.yml
-'''
+```
