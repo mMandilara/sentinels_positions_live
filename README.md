@@ -1,4 +1,4 @@
-# sentinels_positions_live
+# ESA's Sentinels' positions live
 This project creates an html file running on your local http://127.0.0.1:5000, which shows the live locations of ESA's twin satellites Sentinel-2A and 2B.
 ![sentinels](https://github.com/mMandilara/sentinels_positions_live/assets/107554706/1e92d060-25db-448d-83b8-f8bdf610d507)
 
