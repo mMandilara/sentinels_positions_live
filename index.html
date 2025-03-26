@@ -1,45 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESA's Sentinels Postions - Live</title>
-    <h1>Sentinels' Postions Live </h1>
+    <title>Satellite Tracker</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #satelliteMap {
+            margin-top: 20px;
+        }
+        .info-section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <!-- Show the plot from site.py-->
-    <div id="plot">{{ plot | safe }}</div>
-    <p>The idea for this mission was ESA's Copernicus project, in 2015 two identical multispectral satellites were designed and launched in the 
-        summer of that year on 23 June in French Guiana.
-        <br />The purpose of this mission is to monitor changes in the Earth's surface conditions. The images are used to monitor soil, vegetation, 
-        agriculture and forestry with the ultimate aim of protecting the world's environment. 
-        The twin satellites are in geosynchronous orbit, at 
-        786 kilometres, with a distance of 180 degrees between them, which allows for a combined five-day visit to the equator.
-        <br />Due to the mission requirement for high geometric and spectral efficiency of large area measurements, a multispectral instrument 
-        (MSI) design was chosen on the two Sentinel-2s.
-        <br />For more information visit the official ESA website: <a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2"
-    target="_blank"> ESA - Sentinel-2</a>
-    </p>
-    <p> Souce for the positions of the twin satellites: 
-        <a href="https://www.n2yo.com" target="_blank">N2YO.com</a>
-    </p>
-    <script>
-        setTimeout(function() {
-            location.reload();
-        }, {{ refresh_interval }});
-    </script>
-    <!-- Footer-->
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-section about"></div>
-            <div class="footer-section links"></div>
-            <div class="footer-section contact-form"></div>
+    <div class="container">
+        <h1>Satellite Tracker</h1>
+        
+        <div class="info-section">
+            <h2>About This Tracker</h2>
+            <p>This interactive map shows the current positions of Sentinel-2 satellites (S2A and S2B) in real-time. The satellites are displayed as colored markers on the world map with grid lines showing latitude and longitude.</p>
         </div>
-
-        <div class="footer-bottom">
-            &copy; Made by Mariana Mandilara | @github/mMandilara
+        
+        <div class="controls">
+            <button id="refreshBtn">Refresh Positions</button>
+            <button id="toggleGridBtn">Toggle Grid Lines</button>
+        </div>
+        
+        <div id="satelliteMap"></div>
+        
+        <div class="info-section">
+            <h2>Satellite Information</h2>
+            <p><strong>S2A (Sentinel-2A)</strong>: Launched June 23, 2015. Part of the European Space Agency's Copernicus Programme.</p>
+            <p><strong>S2B (Sentinel-2B)</strong>: Launched March 7, 2017. Twin satellite of Sentinel-2A providing improved revisit time.</p>
+            <p>Both satellites provide high-resolution optical imagery for land monitoring.</p>
         </div>
     </div>
+
+    <script>
+        // Sample satellite data (you would replace this with actual data loading)
+        const satelliteData = {
+            'S2A': { longitude: 0, latitude: 0 },
+            'S2B': { longitude: 0, latitude: 0 }
+        };
+        
+        const colors = ['blue', 'red'];
+        const sats = ['S2A', 'S2B'];
+        let showGrid = true;
+        
+        // Create figure
+        const fig = {
+            data: [],
+            layout: {
+                geo: {
+                    showcountries: true,
+                    countrycolor: "Black",
+                    projection: {
+                        type: "natural earth"
+                    },
+                    showcoastlines: true
+                },
+                showlegend: true,
+                width: 1400,
+                height: 600,
+                margin: { t: 0, b: 0, l: 0, r: 0 }
+            }
+        };
+        
+        // Function to update satellite positions
+        function updateSatellitePositions() {
+            // In a real implementation, you would fetch this data from your JSON files
+            // For this example, we'll just simulate some movement
+            sats.forEach(sat => {
+                satelliteData[sat].longitude = (satelliteData[sat].longitude + 5) % 360 - 180;
+                satelliteData[sat].latitude = (satelliteData[sat].latitude + 2) % 180 - 90;
+            });
+            
+            // Clear existing traces except grid lines (which have showlegend=false)
+            while(fig.data.length > 0) {
+                fig.data.pop();
+            }
+            
+            // Add satellite markers
+            sats.forEach((sat, idx) => {
+                const lon = satelliteData[sat].longitude;
+                const lat = satelliteData[sat].latitude;
+                
+                fig.data.push({
+                    type: 'scattergeo',
+                    lon: [lon],
+                    lat: [lat],
+                    mode: 'markers',
+                    marker: {
+                        size: 10,
+                        color: colors[idx]
+                    },
+                    hoverinfo: 'text',
+                    hovertext: `<br>Longitude: ${lon}<br>Latitude: ${lat}`,
+                    name: sat,
+                    showlegend: true
+                });
+            });
+            
+            // Add longitude and latitude grid lines if enabled
+            if (showGrid) {
+                for (let lon = -180; lon <= 180; lon += 10) {
+                    fig.data.push({
+                        type: 'scattergeo',
+                        lon: Array(181).fill(lon),
+                        lat: Array.from({length: 181}, (_, i) => -90 + i),
+                        mode: 'lines',
+                        line: {
+                            color: 'rgba(0,0,0,0.2)',
+                            width: 1
+                        },
+                        showlegend: false
+                    });
+                }
+                
+                for (let lat = -90; lat <= 90; lat += 10) {
+                    fig.data.push({
+                        type: 'scattergeo',
+                        lon: Array.from({length: 361}, (_, i) => -180 + i),
+                        lat: Array(361).fill(lat),
+                        mode: 'lines',
+                        line: {
+                            color: 'rgba(0,0,0,0.2)',
+                            width: 1
+                        },
+                        showlegend: false
+                    });
+                }
+            }
+            
+            // Update the plot
+            Plotly.react('satelliteMap', fig.data, fig.layout);
+        }
+        
+        // Initialize the plot
+        document.addEventListener('DOMContentLoaded', function() {
+            Plotly.newPlot('satelliteMap', fig.data, fig.layout);
+            updateSatellitePositions();
+            
+            // Update positions every 10 seconds
+            setInterval(updateSatellitePositions, 10000);
+            
+            // Add button event listeners
+            document.getElementById('refreshBtn').addEventListener('click', updateSatellitePositions);
+            document.getElementById('toggleGridBtn').addEventListener('click', function() {
+                showGrid = !showGrid;
+                updateSatellitePositions();
+            });
+        });
+    </script>
 </body>
 </html>
